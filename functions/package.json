@@ -1,12 +1,16 @@
 {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "test": "jest"
   },
   "engines": {
     "node": "8"
@@ -18,7 +22,8 @@
     "express": "^4.17.1",
     "firebase": "^7.2.1",
     "firebase-admin": "^8.6.1",
-    "firebase-functions": "^3.3.0"
+    "firebase-functions": "^3.3.0",
+    "jest": "^24.9.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.6"
