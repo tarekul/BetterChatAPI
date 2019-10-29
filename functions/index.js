@@ -44,7 +44,8 @@ app.post("/signup", (req, res) => {
           uid: uid,
           imageUrl: `https://i.pravatar.cc/300/?img=${Math.round(
             Math.random() * 70
-          )}`
+          )}`,
+          createdAt: new Date().toISOString()
         });
         return res.status(201).json(idToken);
       })
@@ -125,7 +126,14 @@ app.get("/posts", (req, res) => {
       snapshot.forEach(doc => {
         const postData = doc.data();
         postData.postId = doc.id;
-        posts.push(postData);
+        return db
+          .doc(`/users/${postData.username}`)
+          .get()
+          .then(doc => {
+            console.log(doc);
+            postData.userDate = doc.createdAt;
+            posts.push(postData);
+          });
       });
       res.status(201).json(posts);
     })
