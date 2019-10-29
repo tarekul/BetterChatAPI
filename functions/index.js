@@ -52,7 +52,8 @@ app.post("/signup", (req, res) => {
         console.error(err);
         if (
           err.code === "auth / weak - password" ||
-          err.code === "auth/user-not-found"
+          err.code === "auth/user-not-found" ||
+          err.code === "auth/wrong-password"
         )
           return res
             .status(400)
@@ -80,7 +81,8 @@ app.post("/login", (req, res) => {
         console.error(err);
         if (
           err.code === "auth / weak - password" ||
-          err.code === "auth/user-not-found"
+          err.code === "auth/user-not-found" ||
+          err.code === "auth/wrong-password"
         )
           return res
             .status(400)
