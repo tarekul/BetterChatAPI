@@ -44,7 +44,8 @@ app.post("/signup", (req, res) => {
           uid: uid,
           imageUrl: `https://i.pravatar.cc/300/?img=${Math.round(
             Math.random() * 70
-          )}`
+          )}`,
+          createdAt: new Date().toISOString()
         });
         return res.status(201).json(idToken);
       })
@@ -117,23 +118,34 @@ app.post("/post", FBauth, (req, res) => {
 });
 
 app.get("/posts", (req, res) => {
+  let posts = [];
   db.collection("posts")
     .orderBy("createdAt", "asc")
     .get()
     .then(snapshot => {
-      let posts = [];
+      let promises = [];
       snapshot.forEach(doc => {
         const postData = doc.data();
-        postData.postId = doc.id;
+        postData.post_id = doc.id;
         posts.push(postData);
+        promises.push(db.doc(`/users/${postData.username}`).get());
       });
-      res.status(201).json(posts);
+      Promise.all(promises).then(results => {
+        results.forEach((doc, i) => {
+          if (doc.data().createdAt) {
+            posts[i].userCreatedAt = doc.data().createdAt;
+          }
+        });
+        res.status(201).json(posts);
+      });
     })
     .catch(err => {
       console.error(err);
       res.status(500).json({ err: err.code });
     });
 });
+
+app.get("/hey", (req, res) => {});
 
 app.post("/image", FBauth, (req, res) => {
   const username = req.username;
